@@ -1,0 +1,10 @@
+version: "2"
+
+services:
+  main:
+    image: wuguanghai45/ruby-java
+    command: ruby /app/myApp.rb -o 0.0.0.0
+    ports:
+      - "3000:4567"
+    volumes:
+      - ".:/app"
