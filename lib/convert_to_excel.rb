@@ -12,7 +12,8 @@ class ConvertToExcel
     generate_output_file
     rm_old_file
     output_filename = run_fill_to_excel_jar("java -jar #{fill_to_excel_jar_file} \"#{@template}\" \"#{@output_file}\" #{json_file}")
-    File.delete(json_file) if File.exists?(json_file)
+    puts json_file
+    #File.delete(json_file) if File.exists?(json_file)
 
     [ @output_file, output_filename ]
   end
@@ -20,7 +21,7 @@ class ConvertToExcel
   def rm_old_file
     file_path = root_path("tmp", "files", "excels")
     Dir.glob("#{file_path}/*").each do |file|
-      if File.basename(file).to_date < (Date.today - 2)
+      if Date.parse(File.basename(file)) < (Date.today - 2)
         FileUtils.rm_rf(file)
       end
     end
