@@ -10,4 +10,7 @@ COPY lib/fillToExcel.jar /export_excel_app/lib/fillToExcel.jar
 COPY myApp.rb /export_excel_app
 COPY templates/export_excel.xls /export_excel_app/templates/export_excel.xls
 
-EXPOSE 4567
+EXPOSE 80
+
+CMD ruby /export_excel_app/myApp.rb -o 0.0.0.0 -p 80
+
