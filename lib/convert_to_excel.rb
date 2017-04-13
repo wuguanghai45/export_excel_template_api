@@ -8,12 +8,22 @@ class ConvertToExcel
     @json = json
   end
 
+  def template_file
+    FileUtils.mkdir_p(root_path("tmp")) unless File.exists?(root_path("tmp"))
+    @template_file ||= begin
+      file = root_path("tmp", guid)
+      File.open(file, "w") { |f| f.write template.read }
+      file
+    end
+  end
+
   def process
     generate_output_file
     rm_old_file
-    output_filename = run_fill_to_excel_jar("java -jar #{fill_to_excel_jar_file} \"#{@template}\" \"#{@output_file}\" #{json_file}")
+    output_filename = run_fill_to_excel_jar("java -jar #{fill_to_excel_jar_file} \"#{template_file}\" \"#{@output_file}\" #{json_file}")
     puts json_file
-    #File.delete(json_file) if File.exists?(json_file)
+    File.delete(json_file) if File.exists?(json_file)
+    File.delete(template_file) if File.exists?(template_file)
 
     [ @output_file, output_filename ]
   end
@@ -36,7 +46,7 @@ class ConvertToExcel
   end
 
   def root_path(*arg)
-    File.join("/", "app", *arg)
+    File.join("/", "export_excel_app", *arg)
   end
 
   def guid
@@ -58,9 +68,9 @@ class ConvertToExcel
   end
 
   def generate_output_file
-    @output_file = root_path("tmp", "files", "excels", Date.today.to_s, "#{File.basename(@template)}_#{guid}")
+    @output_file = root_path("tmp", "files", "excels", Date.today.to_s, "#{File.basename(template_file)}_#{guid}")
     dir = File.dirname(@output_file)
     FileUtils.mkdir_p(dir) unless File.exists?(dir)
-    FileUtils.cp(@template, @output_file)
+    FileUtils.cp(template_file, @output_file)
   end
 end

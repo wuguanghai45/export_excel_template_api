@@ -8,5 +8,6 @@ RUN mkdir /export_excel_app
 COPY lib/convert_to_excel.rb /export_excel_app/lib/convert_to_excel.rb
 COPY lib/fillToExcel.jar /export_excel_app/lib/fillToExcel.jar
 COPY myApp.rb /export_excel_app
-COPY templates /export_excel_app
+COPY templates/export_excel.xls /export_excel_app/templates/export_excel.xls
 
+EXPOSE 4567

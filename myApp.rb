@@ -2,9 +2,8 @@ require 'sinatra'
 require "json"
 require File.expand_path(File.dirname(__FILE__) + '/lib/convert_to_excel')
 
-post '/export' do
-  @path = params[:path]
-  results = ConvertToExcel.new(@path, JSON.generate(params[:object])).process
-  content_type :json
-  { success: true, filepath: results.first }.to_json
+post '/' do
+  @path = params[:template][:tempfile]
+  results = ConvertToExcel.new(@path, params[:object]).process
+  send_file results.first, filename: "Customers.xls"
 end
